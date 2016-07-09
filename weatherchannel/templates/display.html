@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="http://maps.googleapis.com/maps/api/js?sensor=false"
+          type="text/javascript"></script>
+<script type="text/javascript" >
+    var markers = JSON.parse("{{ data }}");
+    var infowindow = new google.maps.InfoWindow({});
+
+function initialize() {
+    geocoder = new google.maps.Geocoder();
+    var latlng = new google.maps.LatLng(40.77627, -73.910965);
+    alert('hello');
+    var myOptions = {
+        zoom: 1,
+        center: latlng,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    addMarker();
+}
+function addMarker() {
+
+        var lat = markers[0];
+        var lng = markers[1];
+        var temperature = markers[2];
+      //  var address=markers[3];
+
+        var myLatlng = new google.maps.LatLng(lat, lng);
+
+        var contentString = "<html><body><div><p><h2>Current temperature is " + temperature + " </h2></p></div></body></html>";
+
+        var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map,
+            title: "Coordinates: " + lat + " , " + lng + " |Current Temperature : " + temperature
+        });
+
+        marker['infowindow'] = contentString;
+
+        global_markers = marker;
+
+        google.maps.event.addListener(global_markers, 'click', function() {
+            infowindow.setContent(this['infowindow']);
+            infowindow.open(map, this);
+        });
+
+}
+
+window.onload = initialize;
+</script>
+</head>
+<body>
+
+<div id="map_canvas" style="width: 600px;height: 500px" ></div>
+
+</body>
+</html>
